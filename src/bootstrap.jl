@@ -23,7 +23,10 @@
 ###############################################################################
 using StatsBase
 using DataFrames
-
+using Formatting
+##########
+# functions
+##########
 function tognm(vtor_anm)
     vtor_gnm = Array{Float64}(convert(Int64, length(vtor_anm)/3));
     vtor_anm =  vtor_anm.^2
@@ -32,7 +35,7 @@ function tognm(vtor_anm)
     end
     return vtor_gnm
 end
-
+#########
 function vtor_correl(vtor_input)
     # Preparo variables
     vtor_in = copy(vtor_input)
@@ -58,7 +61,23 @@ function vtor_correl(vtor_input)
     # q la correlación baje demasiado
     return vtor_in_corr, marca
 end
+##########
+function writeFortranMatrix(mtx_filename, mtx_to_write)
+    mtx_io = open(mtx_filename, "w")
+    FORTRAN_format = FormatExpr("{1:< .4E} ")
+    FORTRAN_newline_format = FormatExpr("\n")
 
+    for i=1:size(mtx_to_write)[1]
+        for j=1:size(mtx_to_write)[2]
+            printfmt(mtx_io, FORTRAN_format, mtx_to_write[i,j])
+        end    
+        printfmt(mtx_io, FORTRAN_newline_format, "")
+    end
+end
+
+##########
+# main program 
+##########
 # Tomo argumentos de consola
 modos_filename = ARGS[1]
 out_boot_mtx_filename = ARGS[2]
@@ -141,7 +160,5 @@ for mat=1:boot_mtx_num
     end
         
     # Escribo la mtx bootstrappeada
-    boot_mtx_df = DataFrame(boot_mtx)
-    writetable(out_boot_mtx_filename_current, boot_mtx_df, separator='\t', header=false)
-    #writedlm(out_boot_mtx_filename, boot_mtx)
+    writeFortranMatrix(out_boot_mtx_filename_current, boot_mtx)    
 end
