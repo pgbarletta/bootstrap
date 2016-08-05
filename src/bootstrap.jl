@@ -79,12 +79,22 @@ end
 # main program 
 ##########
 # Tomo argumentos de consola
+message = string("\n\nUsage:\n",  "julia --depwarn=no bootstrap.jl <input matrix> ",
+"<output matrices prefix> <number of matrices to generate> \"name of info file\"",
+"\n\n")
+if length(ARGS) < 3 || length(ARGS) > 4
+    throw(ArgumentError(message))
+elseif length(ARGS) == 4
+    output_info_filename = ARGS[4]
+    global output_info_bool = true
+else
+    output_info_bool = false
+end
 modos_filename = ARGS[1]
 out_boot_mtx_filename = ARGS[2]
 boot_mtx_num = ARGS[3]
 boot_mtx_num = parse(Int64, boot_mtx_num)
-#modos_filename = "/home/german/labo/16/bootstrap/1XKK_A_ord"
-#out_boot_mtx_filename = "mtx"
+
 # Leo la mtx de modos a bootstrappear
 modos = readdlm(modos_filename)
 # Preparo variables
@@ -161,4 +171,7 @@ for mat=1:boot_mtx_num
         
     # Escribo la mtx bootstrappeada
     writeFortranMatrix(out_boot_mtx_filename_current, boot_mtx)    
+end
+if output_info_bool == true
+    writeFortranMatrix(output_info_filename, corr_mtx)
 end
