@@ -79,7 +79,7 @@ end
 # main program 
 ##########
 # Tomo argumentos de consola
-message = string("\n\nUsage:\n",  "julia --depwarn=no bootstrap.jl <input matrix> ",
+message = string("\n\nUsage:\n",  "./bootstrap.jl <input matrix> ",
 "<output matrices prefix> <number of matrices to generate> \"name of info file\"",
 "\n\n")
 if length(ARGS) < 3 || length(ARGS) > 4
