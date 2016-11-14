@@ -154,8 +154,8 @@ for mat=1:boot_mtx_num
                     continue
                 end
     # Determino q bloque de la original se copia, lo copio y avanzo al proximo bloque de la bootstrap    
-                orig_upper = rn[j] * block[i]
-                orig_lower = orig_upper - block[i] + 1
+                orig_upper = convert(Int64, rn[j] * block[i])
+                orig_lower = convert(Int64, orig_upper - block[i] + 1)
          
                 boot_mtx[boot_lower:boot_upper, i] = modos[orig_lower:orig_upper, i]
         
